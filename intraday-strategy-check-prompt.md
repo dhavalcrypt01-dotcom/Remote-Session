@@ -18,22 +18,63 @@ rules, say "NO TRADE" and explain why. Do not force a trade.
 - Stop loss per trade: 1% of capital = ₹3,500 (max loss including charges)
 - Risk:Reward = 1:1, so the setup needs a win probability clearly above 50% after costs. If it does not, reject it.
 - Max one open position at a time. If the daily loss reaches ₹3,500, stop trading for the day.
-- All positions are squared off by 3:15 PM IST. No overnight carry.
+- All positions are squared off before the session close: 3:15 PM IST for NSE/BSE, or [my chosen time, e.g. 11:00 PM IST] for MCX Crude. No overnight carry.
 - Never use more margin than the available capital. Show the margin required.
 
 ====================================================================
 2. TRADE DETAILS (I WILL FILL)
 ====================================================================
-- Instrument / underlying: [NIFTY / BANKNIFTY / FINNIFTY / SENSEX / stock name]
+- Instrument / underlying: [NIFTY / BANKNIFTY / FINNIFTY / SENSEX / stock name / MCX CRUDEOIL / CRUDEOILM / NATURALGAS]
+- Exchange: [NSE / BSE / MCX]
 - Current spot price: [ ]
 - Futures price: [ ]
-- Expiry I am looking at: [date]  (days to expiry: [ ])
+- Expiry I am looking at: [date]  (days to expiry, DTE: [ ])
+- Futures contract month and its expiry date: [ ]  (for MCX options, the underlying is the futures contract, and the option expiry is earlier than the futures expiry)
+- Are there other expiries I could trade (weekly/monthly/next month)? [list with DTE]
 - Current time (IST): [ ]
 - My idea / bias: [Bullish / Bearish / Range-bound / Not sure]
 - Strategy I am considering: [Buy CE / Buy PE / Sell CE / Sell PE / Bull call spread / Bear put spread /
   Iron condor / Short straddle / Short strangle / Futures / Not sure, please suggest]
 - Current lot size of this instrument: [ ]
 - Attached: chart screenshot(s) [timeframes], option chain [screenshot/data]
+
+====================================================================
+2A. EXPIRY AND DTE (DAYS TO EXPIRY) CHECK (always do this)
+====================================================================
+I will share the expiry dates. Do NOT assume dates; use only what I give you.
+a) Calculate DTE in calendar days and in trading days (exclude weekends and exchange holidays I list).
+b) Classify the expiry: expiry day (0 DTE) / 1-2 DTE / 3-7 DTE / 8+ DTE.
+c) Show how DTE changes each Greek:
+   - Theta decay per hour and per day at this DTE
+   - Gamma level (very high at 0-2 DTE)
+   - Vega (lower near expiry, higher with more DTE)
+d) Compare the expiries I listed and recommend the best one for an intraday trade:
+   a longer DTE gives lower theta and gamma risk but a costlier premium and lower leverage; a short DTE is cheaper but
+   decays and swings faster.
+e) Rollover and liquidity: if the futures expiry is close, check whether volume and OI are shifting to the next month.
+   Warn me if I am on an illiquid contract month.
+f) On expiry day, apply extra rules: no naked selling unless hedged, check for pin risk at max pain, and
+   exit before the final-hour liquidity drop.
+
+====================================================================
+2B. MCX CRUDE OIL SPECIFIC CHECKS (use when the instrument is MCX crude)
+====================================================================
+- Session: MCX runs about 9:00 AM to 11:30 PM IST (11:55 PM when US daylight saving ends). Confirm the current timings.
+  Volatility peaks around the US open (about 6:30-7:30 PM IST) and around inventory data.
+- Contract and lot: CRUDEOIL (100 barrels) / CRUDEOILM mini (10 barrels). Confirm the current lot size and tick value;
+  P&L per ₹1 move = lot size in barrels. Use it for sizing against the ₹3,500 risk.
+- Price drivers to check right now:
+  * EIA weekly crude inventory report (Wednesday, about 8:00 PM IST) and the API report (Tuesday night)
+  * Brent and WTI price and spread; WTI vs MCX premium or discount
+  * USD/INR (MCX price moves with the rupee) and the Dollar Index
+  * OPEC+ meetings or news, geopolitical headlines, US Fed events, Baker Hughes rig count
+  * Natural gas and gold correlation, if relevant
+- Check the MCX crude chart on 5/15-min with VWAP, plus the previous day's high/low and the US session high/low.
+- Option chain on MCX: OI, change in OI, PCR, IV, strike spacing, and bid-ask spread. Crude options can be illiquid
+  away from ATM, so reject strikes with a wide spread.
+- Margin: show the exchange margin (SPAN + exposure) for the futures lot, or the option buy premium / sell margin,
+  against ₹3,50,000.
+- Event rule: if EIA or another high-impact event is within 30 minutes, either WAIT or size down, and say which.
 
 ====================================================================
 3. CHART / PRICE ACTION ANALYSIS
@@ -73,7 +114,7 @@ Output: Option chain bias = Bullish / Bearish / Range, with the expected range f
 ====================================================================
 5. IMPLIED VOLATILITY (IV) ANALYSIS
 ====================================================================
-a) ATM IV now versus earlier today and the previous day: rising or falling?
+a) ATM IV now (note the DTE it belongs to) versus earlier today and the previous day: rising or falling?
 b) IV Rank / IV Percentile (if available). Is IV high or low relative to its own history?
 c) India VIX level and direction.
 d) IV skew: are puts or calls more expensive? What does that say about sentiment?
@@ -122,7 +163,8 @@ c) Sector strength and heavyweight stocks driving the index (for NIFTY/BANKNIFTY
 d) Market breadth: advance/decline ratio.
 e) News or events in the next few hours.
 f) Time-of-day behaviour: avoid entries in the first 5–15 min of chop unless it is a planned ORB trade;
-   the 11:30–1:30 lull; theta acceleration after 1:30 PM on expiry day.
+   the 11:30–1:30 lull; theta acceleration after 1:30 PM on expiry day. For MCX crude, note the Indian session
+   versus the US session, and the EIA data window.
 g) Liquidity and slippage at my strike: bid-ask spread in ₹ and as a % of premium.
 h) Is a freak trade or circuit possible? Is the stock in the F&O ban list (for stock options)?
 
@@ -143,6 +185,7 @@ h) Is a freak trade or circuit possible? Is the stock in the F&O ban list (for s
 | Target profit (₹, net)   | ≈ ₹3,500                               |
 | Margin required (₹)      |                                        |
 | Probability estimate     | %, with reasoning                      |
+| Expiry used & DTE        | date, calendar DTE, trading DTE        |
 | Time-based exit          | Exit by [time] if neither SL nor target is hit |
 | Trailing SL plan         | e.g. move SL to cost after +₹1,750     |
 | Confluence score         | X / 10 (chart, OI, IV, Greeks, global) |
@@ -179,5 +222,6 @@ RULES FOR YOU:
 With a lot size of 65: 20 × 65 = ₹1,300 risk per lot → 3500 ÷ 1300 = 2.69 → **2 lots** (₹2,600 risk).
 Target for ₹3,500 net is about ₹3,500 ÷ 130 qty ≈ 27 points → exit near ₹147–148 (add a little for charges).
 
-> Lot sizes change periodically. Always check the current NSE lot size before you calculate.
+> Lot sizes, MCX timings and expiry dates change. Always check the current exchange circular before you calculate.
+> For MCX crude, P&L per lot = price move in ₹ per barrel × barrels per lot (for example 100 for CRUDEOIL, 10 for CRUDEOILM).
 > This prompt is an analysis aid, not financial advice.
